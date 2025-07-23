@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xenon Chatbot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Open Sans', sans-serif; /* A clear, readable body font */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* Light grey background */
+            margin: 0;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Chat Container Styling */
+        .chat-container {
+            width: 450px; /* Slightly wider for better readability */
+            background-color: #ffffff; /* White background for the chatbox */
+            border-radius: 12px; /* More rounded corners */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Softer, more pronounced shadow */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensures content stays within rounded corners */
+            max-height: 80vh; /* Limits max height to screen for responsiveness */
+            animation: fadeIn 0.8s ease-out; /* Simple fade-in animation */
+        }
+
+        /* Heading Section */
+        .chat-header {
+            background: linear-gradient(135deg, #007bff, #0056b3); /* Blue gradient */
+            color: white;
+            padding: 20px 25px;
+            text-align: center;
+            border-bottom: 1px solid #004085;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative; /* For potential future elements */
+        }
+
+        .chat-header h1 {
+            font-family: 'Montserrat', sans-serif; /* A bold, modern font for the name */
+            font-size: 2.5em; /* Larger, more impactful */
+            font-weight: 700; /* Extra bold */
+            margin: 0;
+            letter-spacing: 1.5px; /* Slight letter spacing for elegance */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Subtle text shadow */
+        }
+
+        .chat-header p {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* Chat Box (Messages Area) */
+        .chat-box {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto; /* Enable scrolling for long conversations */
+            max-height: calc(80vh - 150px); /* Adjust based on header/input height */
+            background-color: #fdfdfd; /* Slightly off-white for message area */
+            border-bottom: 1px solid #eee; /* Separator from input */
+            display: flex; /* Use flexbox for messages */
+            flex-direction: column; /* Stack messages vertically */
+        }
+
+        .message {
+            margin-bottom: 15px; /* More spacing between messages */
+            padding: 12px 18px; /* Larger padding */
+            border-radius: 20px; /* More rounded bubbles */
+            max-width: 85%; /* Slightly wider messages */
+            word-wrap: break-word; /* Ensure long words wrap */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle shadow for message bubbles */
+        }
+
+        .bot-message {
+            background-color: #e6f2ff; /* Light blue for bot messages */
+            color: #2c3e50; /* Darker text for readability */
+            align-self: flex-start; /* Aligns to the left */
+            margin-right: auto;
+            border-bottom-left-radius: 4px; /* Slightly less rounded on the bottom left for the bot */
+        }
+
+        .user-message {
+            background-color: #007bff; /* Primary blue for user messages */
+            color: white;
+            align-self: flex-end; /* Aligns to the right */
+            margin-left: auto;
+            border-bottom-right-radius: 4px; /* Slightly less rounded on the bottom right for the user */
+        }
+
+        /* Input Area Styling */
+        .input-area {
+            display: flex;
+            align-items: center; /* Vertically align items */
+            padding: 15px 20px;
+            background-color: #f8f9fa; /* Light background for input area */
+            border-top: 1px solid #e0e0e0; /* Subtle top border */
+        }
+
+        .input-area input {
+            flex-grow: 1;
+            border: 1px solid #cccccc; /* Softer border */
+            border-radius: 25px; /* More rounded input field */
+            padding: 12px 20px; /* Generous padding */
+            margin-right: 15px;
+            font-size: 1.05em; /* Slightly larger font */
+            outline: none; /* Remove outline on focus */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition on focus */
+        }
+
+        .input-area input:focus {
+            border-color: #007bff; /* Blue border on focus */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Subtle glow on focus */
+        }
+
+        .input-area button {
+            background-color: #28a745; /* Green send button */
+            color: white;
+            border: none;
+            border-radius: 25px; /* Rounded button */
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover and click */
+        }
+
+        .input-area button:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: translateY(-1px); /* Slight lift effect */
+        }
+
+        .input-area button:active {
+            transform: translateY(0); /* Return on click */
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Xenon</h1>
+            <p>Your Intelligent Assistant</p>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <div class="message bot-message">Hello! How can I help you today?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const chatBox = document.getElementById('chat-box');
+            const messageText = userInput.value.trim();
+
+            if (messageText === "") return;
+
+            // Add user message to chat box
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('message', 'user-message');
+            userMessageDiv.textContent = messageText;
+            chatBox.appendChild(userMessageDiv);
+
+            // Scroll to bottom
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Clear input
+            userInput.value = '';
+
+            // Add "Thinking..." message from bot
+            const thinkingMessageDiv = document.createElement('div');
+            thinkingMessageDiv.classList.add('message', 'bot-message');
+            thinkingMessageDiv.textContent = "Xenon is thinking...";
+            chatBox.appendChild(thinkingMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+
+            // Send message to backend
+            fetch('/get_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: messageText }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Remove "Thinking..." message
+                chatBox.removeChild(thinkingMessageDiv);
+
+                const botMessageDiv = document.createElement('div');
+                botMessageDiv.classList.add('message', 'bot-message');
+                botMessageDiv.textContent = data.response;
+                chatBox.appendChild(botMessageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Remove "Thinking..." message even on error
+                chatBox.removeChild(thinkingMessageDiv);
+
+                const errorMessageDiv = document.createElement('div');
+                errorMessageDiv.classList.add('message', 'bot-message');
+                errorMessageDiv.textContent = "Oops! Xenon encountered an error. Please try again.";
+                chatBox.appendChild(errorMessageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        }
+
+        // Allow sending message by pressing Enter
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
