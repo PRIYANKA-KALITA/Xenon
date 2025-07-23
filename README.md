@@ -41,30 +41,7 @@ NumPy & Pandas: For data manipulation and numerical operations.
 
 HTML, CSS, JavaScript: For the frontend user interface.
 
-Project Structure
-chatbot_project/
-├── app.py                     # Main Flask application, orchestrates components
-├── nlu/
-│   ├── intent_model.py        # Handles intent recognition training and prediction
-│   ├── sentiment_model.py     # Performs sentiment analysis on user input
-│   └── data_preprocessing.py  # (Optional: Add if you create this file for preprocessing utilities)
-├── dialogue_manager/
-│   └── context_tracker.py     # Manages conversation history, state, and user profile
-├── knowledge_base/
-│   ├── qa_retriever.py        # Logic for retrieving info from KB and generating responses
-│   └── data/                  # Knowledge base data files
-│       ├── intents.csv        # Training data for intent recognition
-│       └── assam_info.txt     # Example domain-specific knowledge
-├── models/
-│   ├── intent_classifier.pkl  # Trained intent recognition model
-│   └── (other trained models) # e.g., sentiment model if custom trained
-├── templates/
-│   └── index.html             # Frontend HTML for the chatbot interface
-├── static/                    # (Optional: For external CSS/JS/images if you add more)
-├── utils/
-│   └── helpers.py             # (Optional: For any utility functions)
-├── requirements.txt           # List of Python dependencies
-└── README.md                  # This file
+
 Setup & Installation
 Follow these steps to get Xenon up and running on your local machine.
 
